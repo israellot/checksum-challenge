@@ -7,7 +7,7 @@ namespace ChecksumChallenge;
 
 public class Program
 {         
-    public class CrcBenchmark
+    public class ChecksumBenchmark
     {
         public byte[]? SourceBytes { get; set; }
                 
@@ -24,43 +24,43 @@ public class Program
         [Benchmark(Baseline = true)]
         public uint Junior()
         {
-            return Crc32.ChecksumJunior(SourceBytes);
+            return Checksum.ChecksumJunior(SourceBytes);
         }                
 
         [Benchmark]
         public uint Pro()
         {
-            return Crc32.ChecksumPro(SourceBytes);
+            return Checksum.ChecksumPro(SourceBytes);
         }
 
         [Benchmark]
         public uint Senior()
         {
-            return Crc32.ChecksumSenior(SourceBytes);
+            return Checksum.ChecksumSenior(SourceBytes);
         }
 
         [Benchmark]
         public uint Hacker()
         {
-            return Crc32.ChecksumHacker(SourceBytes);
+            return Checksum.ChecksumHacker(SourceBytes);
         }
 
         [Benchmark]
         public uint Expert()
         {
-            return Crc32.ChecksumExpert(SourceBytes);
+            return Checksum.ChecksumExpert(SourceBytes);
         }
 
         [Benchmark]
         public uint ExpertAvx()
         {
-            return Crc32.ChecksumExpertAvx(SourceBytes);
+            return Checksum.ChecksumExpertAvx(SourceBytes);
         }
 
         [Benchmark]
         public uint ExpertAvx2()
         {
-            return Crc32.ChecksumExpertAvx2(SourceBytes);
+            return Checksum.ChecksumExpertAvx2(SourceBytes);
         }
 
         
@@ -75,14 +75,14 @@ public class Program
         {
             var span = b.AsSpan().Slice(0, 1024 + i);
             
-            var crc = Crc32.ChecksumJunior(span);
+            var crc = Checksum.ChecksumJunior(span);
             
-            Assert.Equal(crc, Crc32.ChecksumPro(span));
-            Assert.Equal(crc, Crc32.ChecksumSenior(span));
-            Assert.Equal(crc, Crc32.ChecksumHacker(span));
-            Assert.Equal(crc, Crc32.ChecksumExpert(span));
-            Assert.Equal(crc, Crc32.ChecksumExpertAvx(span));
-            Assert.Equal(crc, Crc32.ChecksumExpertAvx2(span));
+            Assert.Equal(crc, Checksum.ChecksumPro(span));
+            Assert.Equal(crc, Checksum.ChecksumSenior(span));
+            Assert.Equal(crc, Checksum.ChecksumHacker(span));
+            Assert.Equal(crc, Checksum.ChecksumExpert(span));
+            Assert.Equal(crc, Checksum.ChecksumExpertAvx(span));
+            Assert.Equal(crc, Checksum.ChecksumExpertAvx2(span));
         }
         
     }
@@ -94,7 +94,7 @@ public class Program
         
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
-        BenchmarkRunner.Run<CrcBenchmark>();
+        BenchmarkRunner.Run<ChecksumBenchmark>();
 
     }
 
