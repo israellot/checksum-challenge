@@ -18,10 +18,10 @@ internal partial class Checksum
         {
             switch (i % 4)
             {
-                case 0: sum += arr[i] << 24; break;
-                case 1: sum += arr[i] << 16; break;
-                case 2: sum += arr[i] <<  8; break;
-                case 3: sum += arr[i] <<  0; break;
+                case 0: sum += (uint)(arr[i] << 24); break;
+                case 1: sum += (uint)(arr[i] << 16); break;
+                case 2: sum += (uint)(arr[i] <<  8); break;
+                case 3: sum += (uint)(arr[i] <<  0); break;
             }
         }
 

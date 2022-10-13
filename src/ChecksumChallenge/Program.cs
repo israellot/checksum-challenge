@@ -63,7 +63,17 @@ public class Program
             return Checksum.ChecksumExpertAvx2(SourceBytes);
         }
 
-        
+        [Benchmark]
+        public uint Junior2()
+        {
+            return Checksum.ChecksumJunior2(SourceBytes);
+        }
+
+        [Benchmark]
+        public uint Pro2()
+        {
+            return Checksum.ChecksumPro2(SourceBytes);
+        }
     }
 
     public static void Assertions()
@@ -83,6 +93,8 @@ public class Program
             Assert.Equal(crc, Checksum.ChecksumExpert(span));
             Assert.Equal(crc, Checksum.ChecksumExpertAvx(span));
             Assert.Equal(crc, Checksum.ChecksumExpertAvx2(span));
+            Assert.Equal(crc, Checksum.ChecksumJunior2(span));
+            Assert.Equal(crc, Checksum.ChecksumPro2(span));
         }
         
     }

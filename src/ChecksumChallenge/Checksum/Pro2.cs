@@ -16,17 +16,17 @@ internal partial class Checksum
         var i = 0;
         for (i = 0; i <= arr.Length - 4; i+=4)
         {
-            sum += (arr[i] << 24) + (arr[i+1] << 16) + (arr[i+2] << 8) + (arr[i+3]);
+            sum += (uint)(arr[i] << 24) + (uint)(arr[i+1] << 16) + (uint)(arr[i+2] << 8) + (uint)(arr[i+3]);
         }
 
         for (; i < arr.Length; i++)
         {
             switch (i % 4)
             {
-                case 0: sum += arr[i] << 24; break;
-                case 1: sum += arr[i] << 16; break;
-                case 2: sum += arr[i] <<  8; break;
-                case 3: sum += arr[i] <<  0; break;
+                case 0: sum += (uint)(arr[i] << 24); break;
+                case 1: sum += (uint)(arr[i] << 16); break;
+                case 2: sum += (uint)(arr[i] <<  8); break;
+                case 3: sum += (uint)(arr[i] <<  0); break;
             }
         }
 
