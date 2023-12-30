@@ -1,6 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using Benchmarks;
 using System.Globalization;
 using Xunit;
 
@@ -15,7 +14,7 @@ public class Program
 
         private ReadOnlySpan<byte> Span => SourceBytes.AsSpan();
 
-        [Params(1_048_576, 104_857_600)]
+        [Params(1_000_000, 100_000_000)]
         public int Length { get; set; }
 
         [GlobalSetup]
