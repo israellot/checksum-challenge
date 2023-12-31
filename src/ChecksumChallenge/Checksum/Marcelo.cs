@@ -25,6 +25,7 @@ internal static class ChecksumMarcelo
 
             uint sum = 0u;
             int z = 0;
+            int limit;
 
             // Block below is meant to isolate the scope of *mask* and *vectorSum*.
             // Trying to allocate *sum* and *z* into fixed 32-bit CPU registers.
@@ -40,7 +41,8 @@ internal static class ChecksumMarcelo
                 mask = Avx2.Or(mask, mask);
                 mask = Avx2.Or(mask, mask);
 
-                while (z <= arr.Length - 128)
+                limit = arr.Length - 128;
+                while (z <= limit)
                 {
                     Vector256<uint> v1;
 
@@ -63,7 +65,8 @@ internal static class ChecksumMarcelo
                     z += 128;
                 }
 
-                while (z <= arr.Length - 32)
+                limit = arr.Length - 32;
+                while (z <= limit)
                 {
                     Vector256<uint> v1;
 
@@ -78,7 +81,8 @@ internal static class ChecksumMarcelo
                     vectorSum.GetElement(4) + vectorSum.GetElement(5) + vectorSum.GetElement(6) + vectorSum.GetElement(7);
             }
 
-            while (z <= arr.Length - 4)
+            limit = arr.Length - 4;
+            while (z <= limit)
             {
                 sum += BinaryPrimitives.ReverseEndianness(*(uint*)(ptr + z));
 
