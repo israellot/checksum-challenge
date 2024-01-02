@@ -6,12 +6,15 @@ using Xunit;
 namespace ChecksumChallenge;
 
 public class Program
-{         
+{
+    [Config(typeof(AntiVirusFriendlyConfig))]
     public class ChecksumBenchmark
     {
-        public byte[]? SourceBytes { get; set; }
-                
-        [Params(1_000_000)]
+        private byte[]? SourceBytes { get; set; }
+
+        private ReadOnlySpan<byte> Span => SourceBytes.AsSpan();
+
+        [Params(1_000_000, 100_000_000)]
         public int Length { get; set; }
 
         [GlobalSetup]
@@ -24,56 +27,60 @@ public class Program
         [Benchmark(Baseline = true)]
         public uint Junior()
         {
-            return Checksum.ChecksumJunior(SourceBytes);
-        }                
+            return Checksum.ChecksumJunior(Span);
+        }
 
         [Benchmark]
         public uint Pro()
         {
-            return Checksum.ChecksumPro(SourceBytes);
+            return Checksum.ChecksumPro(Span);
         }
 
         [Benchmark]
         public uint Senior()
         {
-            return Checksum.ChecksumSenior(SourceBytes);
+            return Checksum.ChecksumSenior(Span);
         }
 
         [Benchmark]
         public uint Hacker()
         {
-            return Checksum.ChecksumHacker(SourceBytes);
+            return Checksum.ChecksumHacker(Span);
         }
 
         [Benchmark]
         public uint Expert()
         {
-            return Checksum.ChecksumExpert(SourceBytes);
+            return Checksum.ChecksumExpert(Span);
         }
 
         [Benchmark]
         public uint ExpertAvx()
         {
-            return Checksum.ChecksumExpertAvx(SourceBytes);
+            return Checksum.ChecksumExpertAvx(Span);
         }
 
         [Benchmark]
         public uint ExpertAvx2()
         {
-            return Checksum.ChecksumExpertAvx2(SourceBytes);
+            return Checksum.ChecksumExpertAvx2(Span);
         }
 
-        
+        [Benchmark]
+        public uint Marcelo()
+        {
+            return ChecksumMarcelo.Get(Span);
+        }
     }
 
     public static void Assertions()
     {
-        var b = new byte[2048];
+        Span<byte> b = stackalloc byte[2048];
         Random.Shared.NextBytes(b);
 
         foreach (var i in Enumerable.Range(0, 1024))
         {
-            var span = b.AsSpan().Slice(0, 1024 + i);
+            var span = b.Slice(0, 1024 + i);
             
             var crc = Checksum.ChecksumJunior(span);
             
@@ -83,19 +90,16 @@ public class Program
             Assert.Equal(crc, Checksum.ChecksumExpert(span));
             Assert.Equal(crc, Checksum.ChecksumExpertAvx(span));
             Assert.Equal(crc, Checksum.ChecksumExpertAvx2(span));
+            Assert.Equal(crc, ChecksumMarcelo.Get(span));
         }
-        
     }
 
     public static void Main(string[] args)
     {
-
         Assertions(); //make sure all versions are correct
         
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
         BenchmarkRunner.Run<ChecksumBenchmark>();
-
     }
-
 }
